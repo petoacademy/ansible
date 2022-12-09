@@ -1,0 +1,10 @@
+---
+- name: LAMP playbook
+  hosts: 
+    - ubuntu
+    # - debian
+    # - redhat
+
+  roles:
+    # - lamp
+    - mariadb-conf

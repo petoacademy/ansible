@@ -1,0 +1,31 @@
+---
+# tasks file for mariadb-conf
+- name: Install phpmyadmin and support packages
+  become: yes
+  apt:
+    name: 
+      - phpmyadmin
+      - php8.2-mbstring
+    state: present
+  notify:
+    - restart apache
+
+- name: Include phpmyadmin conf in apache
+  become: yes
+  lineinfile:
+    path: /etc/apache2/apache2.conf
+    line: Include /etc/phpmyadmin/apache.conf
+    regexp: "^Include.+phpmyadmin/.+\\.conf$"
+    insertafter: EOF
+  notify:
+    - restart apache
+  tags:
+    - config
+
+- name: Generate password
+  shell:
+    cmd: openssl rand -base64 6
+  register: root_pass_output
+
+- debug:
+    var: root_pass_output
