@@ -1,0 +1,15 @@
+---
+- name: Common playbook
+  hosts: 
+    - debian
+  gather_facts: yes
+
+  vars:
+    php_version: 8.2
+
+  roles:
+    - common
+
+
+
+

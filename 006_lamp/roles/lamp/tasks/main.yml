@@ -1,0 +1,30 @@
+---
+# tasks file for lamp
+- include_tasks: Debian-family.yml
+  when: ansible_os_family == 'Debian'
+
+# - name: Deploy index.html
+#   become: yes
+#   copy:
+#     src: index.html
+#     dest: /var/www/html/index.html
+#     force: yes
+#   tags:
+#     - deploy
+
+- name: Deploy block
+  become: yes
+  block:
+    - name: Make sure index.html does not exist in apache path
+      file:
+        path: /var/www/html/index.html
+        state: absent
+
+    - name: Deploy index.php
+      copy:
+        src: index.php
+        dest: /var/www/html/index.php
+        force: yes
+  tags:
+    - deploy
+

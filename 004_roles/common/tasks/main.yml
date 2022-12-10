@@ -1,0 +1,38 @@
+---
+# tasks file for common
+- name: Add php repository
+  become: yes
+  apt_repository:
+    repo: ppa:ondrej/php
+    state: present
+  tags:
+    - packages
+
+- name: Install base packages
+  become: yes
+  apt:
+    name: "{{ apt_packages }}"
+    update_cache: yes
+    state: present
+  tags:
+    - packages
+
+- name: Download bg image
+  get_url:
+    url: "{{ bg_image_url }}"
+    dest: "{{ bg_image_dest }}"
+  tags:
+    - background
+
+- name: Change bg image
+  shell: "gsettings set org.gnome.desktop.background picture-uri file://{{ bg_image_dest }}"
+  tags:
+    - background
+
+- name: Generate files from template
+  template:
+    src: template.j2
+    dest: "/tmp/{{ item }}.txt"
+  loop: "{{ servers }}"
+  tags:
+    - templating

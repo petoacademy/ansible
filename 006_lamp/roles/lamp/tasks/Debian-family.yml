@@ -1,0 +1,44 @@
+- name: Install block
+  become: yes
+  tags:
+    - install
+  block:
+    - name: Install php prerequisities
+      apt:
+        name:
+          - apt-transport-https
+          - lsb-release
+          - ca-certificates
+          - wget
+          - gnupg
+        update_cache: yes
+
+    - name: Add apt key for debian
+      apt_key:
+        url: https://packages.sury.org/php/apt.gpg
+      when: ansible_distribution == 'Debian'
+
+    - name: Add Debian Php repository
+      apt_repository:
+        repo: "deb https://packages.sury.org/php/ {{ ansible_lsb.codename }} main"
+        filename: php
+      when: ansible_distribution == 'Debian'
+
+    - name: Add php repository
+      apt_repository:
+        repo: ppa:ondrej/php
+        state: present
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Install LAMP
+      apt:
+        name:
+          - apache2
+          - php8.2
+          - php8.2-mysql
+          - mariadb-server
+          - mariadb-client
+        update_cache: yes
+      notify:
+        - start apache
+        - start mariadb

@@ -1,0 +1,9 @@
+---
+# vars file for common
+apt_packages: 
+  - htop
+  - vim
+  - 'php{{ php_version }}'
+  - kazam
+  - filezilla
+  - bluefish
